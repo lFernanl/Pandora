@@ -557,6 +557,96 @@ exports.Formats = [
 		searchShow: false,
 		debug: true,
 		ruleset: ['Pokemon']
-	}
+	},
+	{
+		name: "Monotipo Desafiante",
+		section: "Other Metagames",
+      
+		mod: 'challengemonotype',
+		team: 'randomCCMono',
+		ruleset: ['Pokemon', 'HP Percentage Mod']
+	},
+	{
+		name: "Monotipo Aleatorio (Global)",
+		section: "Other Metagames",
+
+		mod: 'randommonotypeglobal',
+		team: 'randomMono',
+		ruleset: ['Pokemon', 'HP Percentage Mod']
+	},
+	{
+		name: "Monotipo Aleatorio",
+		section: "Other Metagames",
+
+		mod: 'randommonotypeside',      
+		team: 'randomMonoside',
+		ruleset: ['Pokemon', 'HP Percentage Mod']
+	},
+	{
+		name: "Aerea Aleatoria (Standard)",
+		section: "Other Metagames",
+
+		mod: 'randomskystandard',
+		team: 'randomSky',
+		ruleset: ['Pokemon', 'HP Percentage Mod']
+	},
+	{
+		name: "Aerea Aleatoria (Balloon)",
+		section: "Other Metagames",
+
+		mod: 'randomskyballoon',
+		team: 'randomSkyBalloon',
+		ruleset: ['Pokemon', 'HP Percentage Mod']
+	},
+	{
+                	name: "Batalla Aerea",
+                	section: "Other Metagames",
+
+                	ruleset: ['Pokemon', 'Standard', 'Evasion Abilities Clause', 'Team Preview', 'Balloon Clause', 'Sky Clause'],
+                	banlist: ['Uber', 'Drizzle ++ Swift Swim', 'Soul Dew', 'Iron Ball', 'Gravity']
+        	},
+        	{
+                	name: "Batalla Aerea Ubers",
+                	section: "Other Metagames",
+
+                	ruleset: ['Pokemon', 'Standard', 'Evasion Abilities Clause', 'Team Preview', 'Balloon Clause', 'Sky Clause'],
+                	banlist: []
+        	},
+        	{
+                	name: "Ubers Aleatorios",
+                	section: "Other Metagames",
+
+		mod: 'randomubers',
+		team: 'randomUbers',
+                	ruleset: ['Pokemon', 'HP Percentage Mod'],
+                	banlist: []
+        	},
+        	{
+                	name: "Minicopa Aleatoria",
+                	section: "Other Metagames",
+
+		mod: 'randomlittlecup',
+		team: 'randomLC',
+                	ruleset: ['Pokemon', 'HP Percentage Mod'],
+                	banlist: []
+        	},
+        	{
+                	name: "Pesados Aleatorio",
+                	section: "Other Metagames",
+
+		mod: 'randomheavymons',
+		team: 'randomHeavy',
+                	ruleset: ['Pokemon', 'HP Percentage Mod'],
+                	banlist: []
+        	},
+        	{
+                	name: "CAP Aleatorio",
+                	section: "Other Metagames",
+
+		mod: 'randomcaps',
+		team: 'randomCap',
+                	ruleset: ['Pokemon', 'HP Percentage Mod'],
+                	banlist: []
+        	}
 
 ];

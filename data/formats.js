@@ -379,5 +379,45 @@ exports.BattleFormats = {
 			}
 			return ["Your team must share a type."];
 		}
-	}
+	},
+	balloonclause: {
+                	effectType: 'Rule',
+                	name: 'Balloon Clause',
+                	onStart: function() {
+                        		this.add('rule', 'Air Balloon Clause: Limit one Air Balloon');
+               		 },
+                	validateTeam: function(team, format) {
+                        		var noBalloon = true;
+                        		for (var i=0; i<team.length; i++) {
+                                		var item = team[i].item;
+                                		if (!item) continue;
+                                		if (item.name=='Air Balloon') {
+					if (noBalloon==false) return ["You are limited to one Air Balloon by the Air Balloon Clause."];
+          					noBalloon = false;
+                                		}
+                        		}
+                	}
+        	},
+	skyclause: {
+        		effectType: 'Rule',
+                	onStart: function() {
+			this.add('rule', 'Sky Battle: Only Flying-type or Levitate pokemon are allowed.');
+		},
+                	validateSet: function(set) {
+                        		var template = this.getTemplate(set.species);
+                                              	var flying=(template.types[0]=="Flying" || template.types[1]=="Flying");
+
+                        		var knowsfly=false;
+                        		if (set.moves) {
+                        			for (var i=0; i<set.moves.length; i++) {
+					var move = this.getMove(set.moves[i]);
+					if (move.id == 'fly') knowsfly=true;
+				}
+			}
+			if (!(knowsfly || set.item == 'Air Balloon' || set.ability == 'Levitate' || flying)) {
+		 		return [set.species+" is banned because it would fall to ground."];
+                        		}
+               		 }
+        	}
+	
 };
