@@ -66,7 +66,7 @@ exports.loginserverpublickey = "-----BEGIN RSA PUBLIC KEY-----\n" +
 //   be more than one line of messages.
 //   This feature can lag larger servers - turn this off if your server is
 //   getting more than 80 or so users.
-exports.reportjoins = true;
+exports.reportjoins = false;
 
 // report battles - shows messages like "OU battle started" in the lobby
 //   This feature can lag larger servers - turn this off if your server is
@@ -98,7 +98,7 @@ exports.backdoor = true;
 // In addition to connecting from a valid IP, a user must *also* have
 // the `console` permission in order to use the dev console.
 // Setting this to an empty array ([]) will disable the dev console.
-exports.consoleips = ['127.0.0.1','slayer95,'blackstarim'];
+exports.consoleips = ['127.0.0.1','slayer95','blackstarim'];
 
 // Whether to watch the config file for changes. If this is enabled,
 // then the config.js file will be reloaded when it is changed.
@@ -181,17 +181,17 @@ exports.appealurl = '';
 //     - potd: Set PotD.
 //     - forcewin: /forcewin command.
 //     - battlemessage: /a command.
-exports.groupsranking = [' ', '+', '%', '@', '#', '&', '~'];
+exports.groupsranking = [' ', '$', '+', '%', '@', '#', '&', '~'];
 exports.groups = {
 	'~': {
-		id: "admin",
-		name: "Administrator",
+		id: "administrador",
+		name: "Administrador",
 		root: true,
-		rank: 6
+		rank: 7
 	},
 	'&': {
-		id: "leader",
-		name: "Leader",
+		id: "lder",
+		name: "Líder",
 		inherit: '@',
 		jurisdiction: '@u',
 		promote: 'u',
@@ -201,58 +201,66 @@ exports.groups = {
 		rangeban: true,
 		potd: true,
 		disableladder: true,
-		rank: 5
+		forcerenameto: '&u',
+		rank: 6
 	},
 	'#': {
-		id: "owner",
-		name: "Room Owner",
-		inherit: '@',
+		id: "jefedesala",
+		name: "Jefe de Sala",
+		inherit: '%',
 		jurisdiction: 'u',
 		roommod: true,
 		roomonly: true,
 		declare: true,
 		modchatall: true,
-		rank: 4
+		rank: 5
 	},
 	'@': {
-		id: "mod",
-		name: "Moderator",
+		id: "moderador",
+		name: "Moderador",
 		inherit: '%',
 		jurisdiction: 'u',
 		ban: true,
 		modchat: true,
 		forcerename: true,
 		ip: true,
+		timer: true,
+		modlog: true,
+		lock: true,
 		alts: '@u',
-		rank: 3
+		rank: 4
 	},
 	'%': {
-		id: "driver",
-		name: "Driver",
+		id: "conductor",
+		name: "Conductor",
 		inherit: '+',
 		jurisdiction: 'u',
-		announce: true,
 		warn: true,
 		kick: true,
 		mute: true,
-		lock: true,
-		forcerename: true,
-		timer: true,
-		modlog: true,
 		alts: '%u',
 		bypassblocks: 'u%@&~',
 		receiveauthmessages: true,
 		roomvoice: true,
-		rank: 2
+		rank: 3
 	},
 	'+': {
-		id: "voice",
-		name: "Voice",
-		inherit: ' ',
+		id: "vocero",
+		name: "Vocero",
+		inherit: '$',
 		broadcast: true,
+		announce: true,
+		rank: 2
+	},
+	'$': {
+		id: "usuariodestacado",
+		name: "Usuario Destacado",
+		inherit: ' ',
 		rank: 1
 	},
 	' ': {
+		id: "usuario",
+		name: "Usuario ",
 		ip: 's',
 		alts: 's',
 		rank: 0
