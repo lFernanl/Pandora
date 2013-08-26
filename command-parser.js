@@ -320,7 +320,7 @@ function canTalk(user, room, connection, message) {
 					userGroup = '+';
 				}
 			}
-			if (!user.authenticated && room.modchat === true) {
+			if (room.modchat === true && !user.authenticated && config.groupsranking.indexOf(user.group) < 1) {
 				connection.sendTo(room, 'Because moderated chat is set, you must be registered to speak in lobby chat. To register, simply win a rated battle by clicking the look for battle button');
 				return false;
 			} else if (config.groupsranking.indexOf(userGroup) < config.groupsranking.indexOf(room.modchat)) {
