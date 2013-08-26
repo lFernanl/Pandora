@@ -96,17 +96,27 @@ var commands = exports.commands = {
 		this.sendReplyBox('Server version: <b>'+CommandParser.package.version+'</b> <small>(<a href="http://pokemonshowdown.com/versions#' + CommandParser.serverVersion + '">' + CommandParser.serverVersion.substr(0,10) + '</a>)</small>');
 	},
 
-	me: function(target, room, user, connection) {
-		target = this.canTalk(target);
+	me: function(target, room, user, connection, cmd, message) {
+		// By default, /me allows a blank message
+		if (target) target = this.canTalk(target);
 		if (!target) return;
-
+		if (spamroom[user.userid]) {
+			Rooms.rooms.spamroom.add('|c|' + user.getIdentity() + '|' + message);
+			connection.sendTo(room, "|c|" + user.getIdentity() + "|" + message);
+			return false;
+		}
 		return '/me ' + target;
 	},
 
-	mee: function(target, room, user, connection) {
-		target = this.canTalk(target);
+	mee: function(target, room, user, connection, cmd, message) {
+		// By default, /mee allows a blank message
+		if (target) target = this.canTalk(target);
 		if (!target) return;
-
+		if (spamroom[user.userid]) {
+			Rooms.rooms.spamroom.add('|c|' + user.getIdentity() + '|' + message);
+			connection.sendTo(room, "|c|" + user.getIdentity() + "|" + message);
+			return false;
+		}
 		return '/mee ' + target;
 	},
 
