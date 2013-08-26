@@ -11,9 +11,85 @@
  * @license MIT license
  */
 
+//spamroom
+if (typeof spamroom == "undefined") {
+	spamroom = new Object();
+}
+if (!Rooms.rooms.spamroom) {
+	Rooms.rooms.spamroom = new Rooms.ChatRoom("spamroom", "spamroom");
+	Rooms.rooms.spamroom.isPrivate = true;
+	Rooms.rooms.spamroom.staffRoom = true;
+}
+
 var crypto = require('crypto');
 
 var commands = exports.commands = {
+	spam: 'spamroom',
+	spammer: 'spamroom',
+	spamroom: function(target, room, user, connection) {
+		var targetUser = Users.get(target);
+		if (!targetUser && room.recentlytalked) {
+			target = toId(target);
+			for (var i=0; i<room.recentlytalked.length; i++) {
+				var aux = room.recentlytalked[i].substr(0, target.length);
+				if (aux === target) {
+					target = room.recentlytalked[i];
+					break;
+				}
+			}
+			targetUser = Users.get(target);
+		}
+		if (!targetUser) {
+			return this.sendReply('The user \'' + target + '\' does not exist.');
+		}
+		if (!this.can('mute', targetUser)) {
+			return false;
+		}
+		if (spamroom[targetUser.userid]) {
+			return this.sendReply('That user\'s messages are already being redirected to the spamroom.');
+		}
+		spamroom[targetUser.userid] = true;
+		var altlist = targetUser.getAlts();
+		for (var i=0; i<altlist.length; i++) {
+			var loopid = toId(altlist[i]);
+			spamroom[loopid] = true;
+		}
+		Rooms.rooms['spamroom'].add('|raw|<b>' + targetUser.name + ' was added to the spamroom list.</b>');
+		this.logModCommand(targetUser.name + ' was added to spamroom by ' + user.name);
+		return this.sendReply(targetUser.name + ' and their alts were successfully added to the spamroom list.');
+	},
+
+	unspam: 'unspamroom',
+	unspammer: 'unspamroom',
+	unspamroom: function(target, room, user, connection) {
+		var targetUser = Users.get(target);
+		if (!targetUser) {
+			var targetid = toId(target);
+			if (spamroom[targetid]) {
+				delete spamroom[targetid];
+				Rooms.rooms['spamroom'].add('|raw|<b>' + targetid + ' was removed from the spamroom list.</b>');
+				this.logModCommand(targetid + ' was removed from spamroom by ' + user.name);
+				return this.sendReply(targetid + ' was successfully removed from the spamroom list.');
+			} else {
+				return this.sendReply('The user \'' + target + '\' does not exist.');
+			}
+		}
+		if (!this.can('mute', targetUser)) {
+			return false;
+		}
+		if (!spamroom[targetUser.userid]) {
+			return this.sendReply('That user is not in the spamroom list.');
+		}
+		delete spamroom[targetUser.userid];
+		var altlist = targetUser.getAlts();
+		for (var i=0; i<altlist.length; i++) {
+			var loopid = toId(altlist[i]);
+			if (spamroom[loopid]) delete spamroom[loopid];
+		}
+		Rooms.rooms['spamroom'].add('|raw|<b>' + targetUser.name + ' was removed from the spamroom list.</b>');
+		this.logModCommand(targetUser.name + ' was removed from spamroom by ' + user.name);
+		return this.sendReply(targetUser.name + ' and their alts were successfully removed from the spamroom list.');
+	},
 
 	version: function(target, room, user) {
 		if (!this.canBroadcast()) return;
@@ -394,11 +470,32 @@ var commands = exports.commands = {
 	m: 'mute',
 	mute: function(target, room, user) {
 		if (!target) return this.parse('/help mute');
-
-		target = this.splitTarget(target);
-		var targetUser = this.targetUser;
+		
+		var commaIndex = target.indexOf(',');
+		if (commaIndex < 0) {
+			var targetOne = target;
+			target = '';
+		} else {
+			var targetOne = target.substr(0, commaIndex);
+			target = target.substr(commaIndex+1).trim();
+		}
+		
+		targetUser = Users.get(targetOne);
+		if (!targetUser && room.recentlytalked) {
+			targetOne = toId(targetOne);
+			for (var i=0; i<room.recentlytalked.length; i++) {
+				var aux = room.recentlytalked[i].substr(0, targetOne.length);
+				if (aux === targetOne) {
+					targetOne = room.recentlytalked[i];
+					break;
+				}
+			}
+			targetUser = Users.get(targetOne);
+		}
+		
 		if (!targetUser) {
-			return this.sendReply('El usuario '+this.targetUsername+' no ha sido encontrado.');
+			targetUser = null;
+			return this.sendReply('El usuario '+ targetOne +' no ha sido encontrado.');
 		}
 		if (!this.can('mute', targetUser, room)) return false;
 		if (targetUser.mutedRooms[room.id] || targetUser.locked || !targetUser.connected) {
