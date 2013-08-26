@@ -776,7 +776,7 @@ var commands = exports.commands = {
 		case 'true':
 		case 'yes':
 		case 'registered':
-			return false;
+			room.modchat = true;
 			break;
 		case 'off':
 		case 'false':
