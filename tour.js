@@ -19,7 +19,7 @@ exports.tour = function(t) {
                                                         Rooms.rooms[i].addRaw("<h3>El torneo fue cancelado por falta de jugadores.</h3>");
                                                         return;
                                                 }
-                                                Rooms.rooms[i].addRaw("<i>El torneo comenzara en " + difference + " segundo" + (difference == 1 ? '' : 's') + ".</i>");
+                                                Rooms.rooms[i].addRaw("<i>" + (tour[i].guildwar ? "La guerra" : "El torneo") + " comenzara en " + difference + " segundo" + (difference == 1 ? '' : 's') + ".</i>");
                                         }
                                         if (fraction == 0.25 || fraction == 0.5 || fraction == 0.75) sendIt();
                                         if (fraction >= 1) {
@@ -58,7 +58,12 @@ exports.tour = function(t) {
                                 battlesinvtie: new Array(),
                                 question: undefined,
                                 answerList: new Array(),
-                                answers: new Object()
+                                answers: new Object(),
+		guildwar: false,
+		guildOne: '',
+		guildTwo: '',
+		winnersOne: new Array(),
+		winnersTwo: new Array()
                         };
                 },
                 shuffle: function(list) {
@@ -148,6 +153,16 @@ exports.tour = function(t) {
                         for (var i=0; i<players.length; i++) {
                                 if (players[i] == uid) return false;
                         }
+	        if (tour[rid].guildwar) {
+		var userguild = Users.get(uid).profile.guild;
+		var guildcount = 0;
+		var halfsize = tour[rid].size / 2
+		if (userguild !== tour[rid].guildOne && userguild !== tour[rid].guildTwo) return false;
+		for (var i=0; i<tour[rid].players.length; i++) {
+			if (Users.userprofiles[tour[rid].players[i]].guild === userguild) guildcount++;
+			if (guildcount === halfsize) return false;
+		}
+	        }
                         if (!config.tourallowalts){
                                 for (var i=0; i<players.length; i++) {
                                         if (players[i] == uid) return false;
@@ -827,7 +842,7 @@ var cmds = {
                 if (!target) return this.sendReply('El comando correcto es: /tourtime tiempo');
                 target = parseInt(target);
                 if (isNaN(target)) return this.sendReply('El comando correcto es: /tourtime tiempo');
-                if (target < 0) return this.sendReply('Por que reprogramar un torneo para el pasado?');
+                if (target < 1) return this.sendReply('No puedes cerrar las inscripciones asi.');
                 target = Math.ceil(target);
                 tour.timers[room.id].time = target;
                 tour.timers[room.id].startTime = tour.currentSeconds;
@@ -865,7 +880,7 @@ var cmds = {
                         }
                         if (tour[room.id].size == tour[room.id].players.length) tour.start(room.id);
                 } else {
-                        return this.sendReply('No puedes entrar el torneo porque ya estas en el. Digita /l para salir.');
+                        return this.sendReply('No puedes entrar en ' + (tour[room.id].guildwar ? 'esta guerra' : 'este torneo') + '. Digita /j si estas dentro y deseas salir.');
                 }
         },
  
