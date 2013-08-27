@@ -785,7 +785,7 @@ var commands = exports.commands = {
 	rules: function(target, room, user) {
 		if (!this.canBroadcast()) return;
 		this.sendReplyBox('Por favor sigue las reglas:<br />' +
-			'- <a href="http://pokemonshowdown.com/rules">Rules</a><br />' +
+			'- <a href="http://www.smogon.com/es/sim/reglas">Reglas</a><br />' +
 			'</div>');
 	},
 

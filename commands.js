@@ -432,6 +432,20 @@ var commands = exports.commands = {
 		user.leaveRoom(targetRoom || room, connection);
 	},
 
+	roomauth: function(target, room, user, connection) {
+		if (!room.auth) return this.sendReply("/roomauth - Esta sala es oficial, asi que no tiene lista de autoridades propia.");
+		var buffer = [];
+		for (var u in room.auth) {
+			buffer.push(room.auth[u] + u);
+		}
+		if (buffer.length > 0) {
+			buffer = buffer.join(', ');
+		} else {
+			buffer = 'Esta sala no tiene autoridades actualmente.';
+		}
+		connection.popup(buffer);
+	},
+
 	/*********************************************************
 	 * Moderating: Punishments
 	 *********************************************************/
